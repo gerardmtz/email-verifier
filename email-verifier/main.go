@@ -38,7 +38,7 @@ type DomainVar struct {
 // definition domainVars slice
 var domainVars []DomainVar
 
-func isValidDomain (domain string) {
+func isValidDomain (domain string) DomainVar {
 
 	var hasMX, hasSPF, hasDMARC bool
 
@@ -85,7 +85,7 @@ func isValidDomain (domain string) {
 
     for _, record := range dmarcRecords {
 
-        if strings.HasPrefix(records, "v=DMARC1") {
+        if strings.HasPrefix(record, "v=DMARC1") {
             hasDMARC = true
             dmarcRecord = record
             break
@@ -95,12 +95,19 @@ func isValidDomain (domain string) {
 
     // printing our boolean values
 
-    fmt.Printf("domain=%v\n,hasMX=%v\n,hasSPF=%v\n,
-                spfRecord=%v\n, hasDMARC=%v\n,
+/*
+
+    fmt.Printf("domain=%v\n,hasMX=%v\n,hasSPF=%v\n, +
+                spfRecord=%v\n, hasDMARC=%v\n, +
                 dmarcRecord=%v\n",domain,hasMX,hasSPF,
-                spfRecord,hasDMARC,dmarcRecord)
+                spfRecord,hasDMARC,dmarcRecord) */
 
 
+
+fmt.Printf("domain=%v\n,hasMX=%v\n,hasSPF=%v\n,"+
+            "spfRecord=%v\n, hasDMARC=%v\n,"+
+            "dmarcRecord=%v\n", domain, hasMX, hasSPF,
+            spfRecord, hasDMARC, dmarcRecord)
 
     // Assigning into each attribute 
     // of the domainVar the email data
@@ -135,7 +142,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
     // map that will be sent by WriteHeader
 
                // setting the header key 
-    w.Header().set("Content-Type", "application/json")
+    w.Header().Set("Content-Type", "application/json")
 
 
     // domainURL will hold data
@@ -152,7 +159,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
     // domainVar
     domainVars =  append(domainVars, domainVar)
 
-    json.NewEncoder(w).Encode(domain.Vars)
+    json.NewEncoder(w).Encode(domainVars)
 }
 
 func main () {
